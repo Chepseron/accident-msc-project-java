@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="accPU" transaction-type="JTA">
+    <jta-data-source>jndi/acc</jta-data-source>
+    <class>com.amon.db.User</class>
+    <class>com.amon.db.Actorgroup</class>
+    <class>com.amon.db.Accident</class>
+    <class>com.amon.db.Usergroup</class>
+    <class>com.amon.db.Deploymentunit</class>
+    <class>com.amon.db.Status</class>
+    <class>com.amon.db.Audit</class>
+    <class>com.amon.db.Deployment</class>
+    <class>com.amon.db.Actors</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties/>
+  </persistence-unit>
+</persistence>

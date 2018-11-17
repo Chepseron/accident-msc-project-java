@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="#{layoutMB.layout}">
+
+    <ui:define name="head-end">
+        <ui:param name="renderBreadCrumb" value="true"/>
+    </ui:define>
+    <ui:define name="title">
+        <ui:include src="/meters.xhtml"/>
+
+
+
+        <span class="info-box-text bg-red" style="text-align: center">You have been deployed to the following sites</span>
+        <!-- /.info-box-content -->
+
+
+        <h:form id="activityForm" style="width: fit-content; border: 0" > 
+            <p:dataTable var="deployment" 
+                         value="#{acc.deploymentList}" 
+                         paginator="true" rows="10"
+                         style="background: transparent; font-size:11px"
+                         id="activitys" 
+                         emptyMessage="No deployment found with given criteria" 
+                         filteredValue="#{acc.personalDeploymentList}">
+                <p:column style="width: 30px">
+                    <p:graphicImage url="/images/blink.gif"  width="20" height="20"/>
+                </p:column>
+                <p:column filterBy="#{deployment.accident.placeOccured}" sortBy="#{deployment.accident.placeOccured}" headerText="Accident">
+                    <p:outputLabel value="#{deployment.accident.placeOccured}" />
+                </p:column>
+                <p:column filterBy="#{deployment.accident.latitude}" sortBy="#{deployment.accident.latitude}" headerText="Latitude">
+                    <p:outputLabel value="#{deployment.accident.latitude}" />
+                </p:column>
+                <p:column filterBy="#{deployment.accident.longitude}" sortBy="#{deployment.accident.longitude}" headerText="longitude">
+                    <p:outputLabel value="#{deployment.accident.longitude}" />
+                </p:column>
+                <p:column filterBy="#{deployment.createdOn}" sortBy="#{deployment.createdOn}" headerText="created On">
+                    <p:outputLabel value="#{deployment.createdOn}" />
+                </p:column>
+                <p:column filterBy="#{deployment.actor.name}" sortBy="#{deployment.actor.name}" headerText="Actor">
+                    <p:outputLabel value="#{deployment.actor.name}" />
+                </p:column>
+
+                <p:column style="width:4%">
+                    <p:commandLink process="@this" styleClass="si-icon-16x16 si-icon-edit" update=":editForm:deploymentDetail" oncomplete="PF('deploymentDialog').show()"  value="ACKNOWLEDGE"   title="Edit  #{deployment.accident}'s DETAILS">                                                  
+                        <f:setPropertyActionListener value="#{deployment}"   target="#{acc.deployment}" />  
+                    </p:commandLink>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+
+        <br/>
+        <br/>
+        <span class="info-box-text bg-red" style="text-align: center">Accidents</span>
+        <h:form id="editForm" style="width: fit-content; border: 0" > 
+            <p:dialog header="Deployment" dynamic="true" widgetVar="deploymentDialog" showEffect="clip"  hideEffect="explode" resizable="false">
+                <p:outputPanel id="deploymentDetail" style="text-align:center;">  
+
+                    <h:panelGrid columns="1" >
+                        <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+                                     layout="grid" styleClass="ui-fluid card">
+                            <p:outputLabel value="Accident"/>
+                            <p:selectOneMenu    converter="#{convertor}" immediate="true"   style="width: 200px" value="#{acc.deployment.accident}"  >
+                                <f:selectItem itemLabel=" " itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{acc.accidentList}"  var="deployment" itemValue="#{deployment}" itemLabel="#{deployment.placeOccured}  #{deployment.road}" />
+                            </p:selectOneMenu>
+                            <p:outputLabel value="Status"/>
+                            <p:selectOneMenu    converter="#{convertor}" immediate="true"   style="width: 200px" value="#{acc.deployment.statusID}"  >
+                                <f:selectItem itemLabel=" " itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{acc.statusList}"  var="depunit" itemValue="#{depunit}" itemLabel="#{depunit.name}" />
+                            </p:selectOneMenu>
+                            <p:outputLabel value="Severity"/>
+                            <p:selectOneMenu    converter="#{convertor}" immediate="true"   style="width: 200px" value="#{acc.deployment.severity}"  >
+                                <f:selectItem itemLabel="High" itemValue="High"/>
+                                <f:selectItem itemLabel="Moderate" itemValue="Moderate"/>
+                                <f:selectItem itemLabel="Low" itemValue="Low"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel value="Deployed Unit"/>
+                            <p:selectManyMenu    converter="#{convertor}" immediate="true"   style="width: 200px" value="#{acc.deployment.deploymentUnitID}" showCheckbox="true" >
+                                <f:selectItem itemLabel=" " itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{acc.deploymentunitList}"  var="deployment" itemValue="#{deployment.orgname}" itemLabel="#{deployment.orgname}" />
+                            </p:selectManyMenu>
+                            <p:outputLabel value="Deployed Individual"/>
+                            <p:selectManyMenu    converter="#{convertor}" immediate="true"   style="width: 200px" value="#{acc.deployment.actor}" showCheckbox="true" >
+                                <f:selectItem itemLabel=" " itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{acc.deploymentunitList}"  var="deployment" itemValue="#{deployment.orgname}" itemLabel="#{deployment.orgname}" />
+                            </p:selectManyMenu>
+                            <p:messages for="userForm"  showDetail="true" />
+                        </p:panelGrid>
+                        <h:panelGrid columns="8">
+                            <p:commandButton value="MARK AS REPORTED"  icon="fa fa-plus" styleClass="btn-primary"  action="#{acc.updateDeployment}" />
+                            <p:commandButton value="LOGOUT"   action="#{acc.logout}"  icon="fa fa-sign-out" styleClass="btn-primary" />
+                        </h:panelGrid>
+                    </h:panelGrid>
+
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+
+        <p:dataTable var="accident" value="#{acc.accidentList}" 
+                     paginator="true" rows="10"
+
+                     style="background: transparent; font-size:11px"
+                     id="activitysTable"
+                     emptyMessage="No reported accident found with given criteria" filteredValue="#{acc.accidentList}">
+            <p:column style="width: 30px">
+                <p:graphicImage url="/images/blink.gif"  width="20" height="20"/>
+            </p:column>
+            <p:column headerText="Deceased Victims">
+                <p:outputLabel value="#{accident.deadVictims}" style="color: red" />
+            </p:column>
+            <p:column   headerText="injured Victims">
+                <p:outputLabel value="#{accident.injuredVictims}"  style="color: orange"/>
+            </p:column>
+            <p:column filterBy="#{accident.placeOccured}" sortBy="#{accident.placeOccured}" headerText="place Occured">
+                <p:outputLabel value="#{accident.placeOccured}" />
+            </p:column>
+            <p:column filterBy="#{accident.road}" sortBy="#{accident.road}" headerText="Road">
+                <p:outputLabel value="#{accident.road}" />
+            </p:column>
+
+            <p:column filterBy="#{accident.timeOccured}" sortBy="#{accident.timeOccured}" headerText="time Occured">
+                <p:outputLabel value="#{accident.timeOccured}" />
+            </p:column>
+        </p:dataTable>
+    </ui:define>
+    <ui:define name="body">
+
+
+        <span class="info-box-text bg-aqua" style="text-align: center">Chart Representation of victims/Roads</span>
+        <p:chart type="line" model="#{acc.accidentModel}" style="height:400px; width: 100%"/>
+
+
+        <script type="text/javascript">
+            /*if ('serviceWorker' in navigator) {
+             navigator.serviceWorker.register('sw.js');
+             }*/
+
+
+            if ('serviceWorker' in navigator) {
+                /*  navigator.serviceWorker.getRegistrations().then(function (registrations) {
+                 for (let registration of registrations) {
+                 registration.unregister()
+                 }
+                 });*/
+
+                window.addEventListener('load', function () {
+                    navigator.serviceWorker.register('sw.js').then(function (registration) {
+                        // Registration was successful
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    }, function (err) {
+                        // registration failed :(
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+                });
+            }
+        </script>
+        <script>
+            new Chartist.Line('.ct-chart', {
+                labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+                series: [
+                    [12, 9, 7, 8, 5],
+                    [2, 1, 3.5, 7, 3],
+                    [1, 3, 4, 5, 6]
+                ]
+            }, {
+                fullWidth: true,
+                chartPadding: {
+                    right: 40
+                }
+            });
+        </script>
+
+
+        <script type="text/javascript"
+                src="https://maps.google.com/maps/api/js?key=AIzaSyAZvxb5BAGPyDnBg5uaoB-U3y0se0KeAqo">
+            function geocode() {
+                PF('geoMap').geocode(document.getElementById('address').value);
+            }
+
+            function reverseGeocode() {
+                var lat = document.getElementById('lat').value,
+                        lng = document.getElementById('lng').value;
+
+                PF('revGeoMap').reverseGeocode(lat, lng);
+            }
+        </script>
+
+    </ui:define>
+
+
+</ui:composition>

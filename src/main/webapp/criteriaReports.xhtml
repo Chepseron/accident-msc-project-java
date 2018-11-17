@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:a4j="http://richfaces.org/a4j"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="#{layoutMB.layout}">
+
+    <ui:define name="head-end">
+        <ui:param name="renderBreadCrumb" value="true"/>
+    </ui:define>
+    <ui:define name="title">
+        <ui:include src="/meters.xhtml"/>
+    </ui:define>
+    <ui:define name="body">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+
+                <p:separator/>
+                <p:panel id="spanel">
+                    <h:panelGrid columns="1" styleClass="ui-noborder">
+                        <p:growl id="msgs1" sticky="true" showDetail="true" />
+                        <p:tabView  styleClass="si-icon-16x16 si-icon-edit ui-noborder"    style="background: transparent; width: 100%;" >  
+                            <p:tab title="All REPORTS(Able to extract hard copies, PDF,EXCEL e.t.c))">
+                                <p:tabView  styleClass="si-icon-16x16 si-icon-edit"    style="background: transparent" >  
+                                    <p:tab title="REPORTED ACCIDENTS" >
+                                        <h:form id="accidentForm" style="width: auto" >
+                                            <p:dataTable var="accident" value="#{acc.accidentList}" 
+                                                         paginator="true" rows="10"
+
+                                                         style="background: transparent; font-size:11px"
+                                                         id="activitysTable"
+                                                         emptyMessage="No reported accident found with given criteria" filteredValue="#{acc.accidentList}">
+
+                                                <p:column filterBy="#{accident.deadVictims}" sortBy="#{accident.deadVictims}" headerText="Deceased Victims">
+                                                    <p:outputLabel value="#{accident.deadVictims}" />
+                                                </p:column>
+                                                <p:column filterBy="#{accident.injuredVictims}" sortBy="#{accident.injuredVictims}" headerText="injured Victims">
+                                                    <p:outputLabel value="#{accident.injuredVictims}" />
+                                                </p:column>
+
+                                                <p:column filterBy="#{accident.msisdn}" sortBy="#{accident.msisdn}" headerText="msisdn">
+                                                    <p:outputLabel value="#{accident.msisdn}" />
+                                                </p:column>
+                                                <p:column filterBy="#{accident.placeOccured}" sortBy="#{accident.placeOccured}" headerText="place Occured">
+                                                    <p:outputLabel value="#{accident.placeOccured}" />
+                                                </p:column>
+                                                <p:column filterBy="#{accident.road}" sortBy="#{accident.road}" headerText="Road">
+                                                    <p:outputLabel value="#{accident.road}" />
+                                                </p:column>
+                                                <p:column filterBy="#{accident.timeOccured}" sortBy="#{accident.timeOccured}" headerText="time Occured">
+                                                    <p:outputLabel value="#{accident.timeOccured}" />
+                                                </p:column>
+                                                <p:column filterBy="#{accident.statusID}" sortBy="#{accident.statusID}" headerText="Status">
+                                                    <p:outputLabel value="#{accident.statusID}" />
+                                                </p:column>
+
+                                            </p:dataTable>
+                                        </h:form>
+                                    </p:tab>
+
+                                    <p:tab title="ACTORS/HELPERS">
+                                        <h:form id="actorsdAnimalsForm" style="width: auto" >
+                                            <p:dataTable var="actors" value="#{acc.actorsList}" widgetVar="usersTable"
+                                                         paginator="true" rows="10"
+
+                                                         style="background: transparent; font-size:11px"
+                                                         id="actorssTable"
+                                                         emptyMessage="No actors/helpers found with given criteria" filteredValue="#{acc.actorsList}">
+
+                                                <p:column filterBy="#{actors.names}" sortBy="#{actors.names}" headerText="Planned Activity">
+                                                    <p:outputLabel value="#{actors.names}" />
+                                                </p:column>
+                                                <p:column filterBy="#{actors.statusID.name}" sortBy="#{actors.statusID.name}" headerText="status">
+                                                    <p:outputLabel value="#{actors.statusID.name}" />
+                                                </p:column>
+                                                <p:column filterBy="#{actors.createdBy.name}" sortBy="#{actors.createdBy.name}" headerText="created by">
+                                                    <p:outputLabel value="#{actors.createdBy.name}" />
+                                                </p:column>
+
+                                                <p:column  sortBy="#{actors.dateCreated}"  filterBy="#{actors.dateCreated}" headerText="Date Created">
+                                                    <p:outputLabel value="#{actors.dateCreated}"  style="display: block; color:GREEN" />
+                                                </p:column>
+
+                                            </p:dataTable>
+                                        </h:form>
+                                    </p:tab>
+                                    <p:tab title="DEPLOYED UNITS/DEPLOYED HELPERS">
+                                        <h:form id="deploymentForm" style="width: auto" >
+                                            <p:dataTable var="deployment" value="#{acc.deploymentList}" 
+                                                         paginator="true" rows="10"
+
+                                                         style="background: transparent; font-size:11px"
+                                                         id="activitysTable"
+                                                         emptyMessage="No deployment found with given criteria" filteredValue="#{acc.deploymentList}">
+                                                <p:column filterBy="#{deployment.accident.placeOccured}" sortBy="#{deployment.accident.placeOccured}" headerText="Accident">
+                                                    <p:outputLabel value="#{deployment.accident.placeOccured}" />
+                                                </p:column>
+                                                <p:column filterBy="#{deployment.createdBy.name}" sortBy="#{deployment.createdBy.name}" headerText="Created By">
+                                                    <p:outputLabel value="#{deployment.createdBy.name}" />
+                                                </p:column>
+                                                <p:column filterBy="#{deployment.createdOn}" sortBy="#{deployment.createdOn}" headerText="created On">
+                                                    <p:outputLabel value="#{deployment.createdOn}" />
+                                                </p:column>
+                                                <p:column filterBy="#{deployment.actors1Number}" sortBy="#{deployment.actors1Number}" headerText="Police men">
+                                                    <p:outputLabel value="#{deployment.actors1Number}" />
+                                                </p:column>
+                                                <p:column filterBy="#{deployment.actors2Number}" sortBy="#{deployment.actors2Number}" headerText="First Aiders">
+                                                    <p:outputLabel value="#{deployment.actors2Number}" />
+                                                </p:column>
+                                                <p:column filterBy="#{deployment.actors3Number}" sortBy="#{deployment.actors3Number}" headerText="Paramedics">
+                                                    <p:outputLabel value="#{deployment.actors3Number}" />
+                                                </p:column>
+                                                <p:column filterBy="#{deployment.deploymentUnitID}" sortBy="#{deployment.deploymentUnitID}" headerText="Organisation name">
+                                                    <p:outputLabel value="#{deployment.deploymentUnitID}" />
+                                                </p:column>
+
+                                            </p:dataTable>
+                                        </h:form>
+                                    </p:tab>
+
+                                    <p:tab title="REGISTERED HELPERS/ACTORS">
+                                        <h:form id="deploymentunitForm" style="width: auto" >
+                                            <p:dataTable var="deploymentunit" value="#{acc.deploymentunitList}" 
+                                                         paginator="true" rows="10"
+
+                                                         style="background: transparent; font-size:11px"
+                                                         id="activitysTable"
+                                                         emptyMessage="No deployment unit found with given criteria" filteredValue="#{acc.deploymentunitList}">
+
+                                                <p:column filterBy="#{deploymentunit.actors.names}" sortBy="#{deploymentunit.actors.names}" headerText="Actors">
+                                                    <p:outputLabel value="#{deploymentunit.actors.names}" />
+                                                </p:column>
+                                                <p:column filterBy="#{deploymentunit.createdBy.name}" sortBy="#{deploymentunit.createdBy.name}" headerText="created By">
+                                                    <p:outputLabel value="#{deploymentunit.createdBy.name}" />
+                                                </p:column>
+                                                <p:column filterBy="#{deploymentunit.dateCreated}" sortBy="#{deploymentunit.dateCreated}" headerText="created On">
+                                                    <p:outputLabel value="#{deploymentunit.dateCreated}" />
+                                                </p:column>
+                                                <p:column filterBy="#{deploymentunit.orgname}" sortBy="#{deploymentunit.orgname}" headerText="Organization Name">
+                                                    <p:outputLabel value="#{deploymentunit.orgname}" />
+                                                </p:column>
+                                                <p:column filterBy="#{deploymentunit.statusID.name}" sortBy="#{deploymentunit.statusID.name}" headerText="Status">
+                                                    <p:outputLabel value="#{deploymentunit.statusID.name}" />
+                                                </p:column>
+
+                                            </p:dataTable>
+                                        </h:form>
+                                    </p:tab>
+                                    <p:tab title="USER GROUPS">
+                                        <h:form id="budgetForm" style="width: auto" >
+                                            <p:dataTable var="usergroups" value="#{acc.usergroupList}" 
+                                                         paginator="true" rows="10"
+                                                         editable="true"
+                                                         style="background: transparent; font-size:11px"
+                                                         id="activitysTable"
+                                                         emptyMessage="No group found with given criteria" filteredValue="#{acc.usergroupList}">
+                                                <p:column filterBy="#{usergroups.name}" sortBy="#{usergroups.name}" headerText="name">
+                                                    <p:outputLabel value="#{usergroups.name}" />
+                                                </p:column>
+                                                <p:column filterBy="#{usergroups.responsibilities}" sortBy="#{usergroups.responsibilities}" headerText="Variance">
+                                                    <p:outputLabel value="#{usergroups.responsibilities}" />
+                                                </p:column>
+
+                                            </p:dataTable>
+                                        </h:form>
+                                    </p:tab>
+
+
+                                    <p:tab title="SYSTEM USERS">
+                                        <h:form id="createdUsers" style="width: auto" >
+                                            <p:dataTable var="users" value="#{acc.userList}" widgetVar="usersTable"
+                                                         paginator="true" rows="10"
+
+                                                         style="background: transparent; font-size:11px"
+                                                         id="usersTable"
+                                                         emptyMessage="No users found with given criteria" filteredValue="#{acc.userList}">
+                                                <p:column filterBy="#{users.name}" sortBy="#{users.name}" headerText="Name">
+                                                    <p:outputLabel value="#{users.name}" />
+                                                </p:column>
+                                                <p:column filterBy="#{users.email}" sortBy="#{users.email}" headerText="Email Address">
+                                                    <p:outputLabel value="#{users.email}" />
+                                                </p:column>
+                                                <p:column filterBy="#{users.phone}" sortBy="#{users.phone}" headerText="phone">
+                                                    <p:outputLabel value="#{users.phone}" />
+                                                </p:column>
+                                                <p:column filterBy="#{users.username}" sortBy="#{users.username}" headerText="username">
+                                                    <p:outputLabel value="#{users.username}" />
+                                                </p:column>
+                                                <p:column  sortBy="#{users.groupID}"  filterBy="#{users.groupID}" headerText ="Group">
+                                                    <p:outputLabel value="#{users.groupID}"  style="display: block; color:GREEN" />
+                                                </p:column>
+
+                                            </p:dataTable>
+                                        </h:form>
+                                    </p:tab>
+                                </p:tabView>
+                            </p:tab>
+                        </p:tabView>
+                    </h:panelGrid>
+                </p:panel>
+            </div>
+        </div>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-danger">
+            <p:commandButton value="Yes" type="button" styleClass="btn-primary ui-confirmdialog-yes"
+                             icon="fa fa-check"/>
+            <p:commandButton value="No" type="button" styleClass="btn-danger ui-confirmdialog-no"
+                             icon="fa fa-close"/>
+        </p:confirmDialog>
+
+        <script type="text/javascript">
+            /*if ('serviceWorker' in navigator) {
+             navigator.serviceWorker.register('sw.js');
+             }*/
+
+
+            if ('serviceWorker' in navigator) {
+                /*  navigator.serviceWorker.getRegistrations().then(function (registrations) {
+                 for (let registration of registrations) {
+                 registration.unregister()
+                 }
+                 });*/
+
+                window.addEventListener('load', function () {
+                    navigator.serviceWorker.register('sw.js').then(function (registration) {
+                        // Registration was successful
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    }, function (err) {
+                        // registration failed :(
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+                });
+            }
+        </script>
+    </ui:define>
+
+
+</ui:composition>

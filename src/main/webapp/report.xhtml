@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="#{layoutMB.layout}">
+
+    <ui:define name="head-end">
+        <ui:param name="renderBreadCrumb" value="true"/>
+    </ui:define>
+
+    <ui:define name="title">
+        <ui:include src="/meters.xhtml"/>
+    </ui:define>
+    <ui:define name="body">
+
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <div id="main-buttons" class="hidden-sm hidden-xs">
+                    <h:form id="editForm1">
+                        <p:commandButton action="car-form?faces-redirect=true" icon="fa fa-plus"
+                                         value="New" styleClass="btn-primary"/>
+                        <p:spacer width="5"/>
+                        <p:commandButton value="Delete Selected" icon="fa fa-trash" styleClass="btn-danger"
+                                         process="@this" update="@form"
+                                         >
+                            <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger"/>
+                        </p:commandButton>
+                        <p:spacer width="5"/>
+                        <p:commandButton value="Search" update="@(.ui-dialog)" styleClass="btn-info"
+                                         oncomplete="PF('searchDialog').show()" icon="fa fa-search"/>
+
+                        <p:spacer width="5"/>
+                        <p:commandButton value="Clear" update="@(.ui-dialog, .ui-datatable)" process="@form"
+
+                                         icon="fa fa-refresh"/>
+                    </h:form>
+                </div>
+                <h:form id="ButtonsForm">
+                    <p:splitButton value="New" action="car-form?faces-redirect=true"
+                                   icon="fa fa-plus"
+                                   styleClass="hidden-md hidden-lg btn-primary">
+                        <p:menuitem value="Delete Selected" 
+                                    process="@this" update="@form" 
+                                    icon="fa fa-trash">
+                            <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger"/>
+                        </p:menuitem>
+                        <p:menuitem value="Search" update="@(.ui-dialog)"
+                                    oncomplete="PF('searchDialog').show()"
+                                    icon="fa fa-search"/>
+                        <p:menuitem value="Clear" update="@(.ui-dialog, .ui-datatable)" process="@form"
+                                    icon="fa fa-refresh"/>
+                    </p:splitButton>
+                </h:form>
+                <p:separator/>
+
+                <p:panel id="spanel"  style="margin: 4em; background: transparent;  position: relative; border: 0">
+                    <h:panelGrid columns="1">
+                        <p:growl id="msgs1" sticky="true" showDetail="true" />
+                        <p:tabView  styleClass="si-icon-16x16 si-icon-edit"    style="background: transparent" >  
+                            <p:tab title="COHORT ANALYSIS" >
+                                <h:form>
+                                    <p:dataTable var="medrescohortanalysis" value="#{pmanager.medrescohortanalysisList}" widgetVar="cohortTable"
+                                                 paginator="true" rows="10"
+                                                 style="background: transparent; font-size: xx-small; "
+                                                 id="cohortTable"
+                                                 emptyMessage="No cohort analysis found with given criteria" filteredValue="#{els.medrescohortanalysisList}">
+                                        <f:facet name="header">
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/excel.png" width="32" height="32"/>
+                                                <p:dataExporter type="xls" target="cohortTable" fileName="cohort" />
+                                            </h:commandLink>
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/pdf.png" width="32" height="32"/>
+                                                <p:dataExporter type="pdf" target="cohortTable" fileName="cohort"/>
+                                            </h:commandLink>
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/csv.png" width="32" height="32"/>
+                                                <p:dataExporter type="csv" target="cohortTable" fileName="cohort" />
+                                            </h:commandLink>
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/xml.png" width="32" height="32"/>
+                                                <p:dataExporter type="xml" target="cohortTable" fileName="cohort" />
+                                            </h:commandLink>
+                                        </f:facet>
+                                        <p:column filterBy="#{medrescohortanalysis.casefinding.medicalresID.facilityName}" sortBy="#{medrescohortanalysis.casefinding.medicalresID.facilityName}" headerText="Facility">
+                                            <p:outputLabel value="#{medrescohortanalysis.casefinding.medicalresID.facilityName}" />
+                                        </p:column>
+                                        <p:column filterBy="#{medrescohortanalysis.casefinding.medicalresID.visitdate}" sortBy="#{medrescohortanalysis.casefinding.medicalresID.visitdate}" headerText="visit date">
+                                            <p:outputLabel value="#{medrescohortanalysis.casefinding.medicalresID.visitdate}" />
+                                        </p:column>
+                                        <p:column filterBy="#{medrescohortanalysis.casefinding.medicalresID.kaptldprojectofficer.name}" sortBy="#{medrescohortanalysis.casefinding.medicalresID.kaptldprojectofficer.name}" headerText="KAPTLD project officer">
+                                            <p:outputLabel value="#{medrescohortanalysis.casefinding.medicalresID.kaptldprojectofficer.name}" />
+                                        </p:column>
+
+                                        <p:column filterBy="#{medrescohortanalysis.lostfollowups}"  sortBy="#{medrescohortanalysis.lostfollowups}"  headerText="Lost Follow ups">
+                                            <p:outputLabel value="#{medrescohortanalysis.lostfollowups}" />
+                                        </p:column>
+
+                                        <p:column filterBy="#{medrescohortanalysis.deadpatients}"  sortBy="#{medrescohortanalysis.deadpatients}"  headerText="Dead">
+                                            <p:outputLabel value="#{medrescohortanalysis.deadpatients}" />
+                                        </p:column>
+                                        <p:column filterBy="#{medrescohortanalysis.successfultreated}"  sortBy="#{medrescohortanalysis.successfultreated}"  headerText="successfully treated">
+                                            <p:outputLabel value="#{medrescohortanalysis.successfultreated}" />
+                                        </p:column>
+
+                                        <p:column filterBy="#{medrescohortanalysis.mdrtbsuccessfullytreated}"  sortBy="#{medrescohortanalysis.mdrtbsuccessfullytreated}"  headerText="MDR-TB successfully treated">
+                                            <p:outputLabel value="#{medrescohortanalysis.mdrtbsuccessfullytreated}" />
+                                        </p:column>
+
+                                        <p:column filterBy="#{medrescohortanalysis.datecreated}"  sortBy="#{medrescohortanalysis.datecreated}"  headerText="datecreated">
+                                            <p:outputLabel value="#{medrescohortanalysis.datecreated}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:form>
+                            </p:tab>
+
+                            <p:tab title="ADMINISTRATIVE INDICATORS">
+                                <h:form>
+                                    <p:dataTable var="perfTable" value="#{pmanager.performanceindicatorList}" widgetVar="perfTable"
+                                                 paginator="true" rows="10"
+                                                 style="background: transparent; font-size: xx-small; "
+                                                 id="perfTable"
+                                                 emptyMessage="No performance indicator found with given criteria" filteredValue="#{pmanager.performanceindicatorList}">
+                                        <f:facet name="header">
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/excel.png" width="32" height="32"/>
+                                                <p:dataExporter type="xls" target="perfTable" fileName="perf" />
+                                            </h:commandLink>
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/pdf.png" width="32" height="32"/>
+                                                <p:dataExporter type="pdf" target="perfTable" fileName="perf"/>
+                                            </h:commandLink>
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/csv.png" width="32" height="32"/>
+                                                <p:dataExporter type="csv" target="perfTable" fileName="perf" />
+                                            </h:commandLink>
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/xml.png" width="32" height="32"/>
+                                                <p:dataExporter type="xml" target="perfTable" fileName="perf" />
+                                            </h:commandLink>
+                                        </f:facet>
+                                        <p:column filterBy="#{perfTable.medicalresID.facilityName}" sortBy="#{perfTable.medicalresID.facilityName}" headerText="Facility">
+                                            <p:outputLabel value="#{perfTable.medicalresID.facilityName}" />
+                                        </p:column>
+                                        <p:column filterBy="#{perfTable.medicalresID.kaptldprojectofficer.name}" sortBy="#{perfTable.medicalresID.kaptldprojectofficer.name}" headerText="KAPTLD project officer">
+                                            <p:outputLabel value="#{perfTable.medicalresID.kaptldprojectofficer.name}" />
+                                        </p:column>
+                                        <p:column filterBy="#{perfTable.integratedtbhiv}"  sortBy="#{perfTable.integratedtbhiv}"  headerText="integratedtbhiv">
+                                            <p:outputLabel value="#{perfTable.integratedtbhiv}" />
+                                        </p:column>
+                                        <p:column filterBy="#{perfTable.ipt}"  sortBy="#{perfTable.ipt}"  headerText="ipt">
+                                            <p:outputLabel value="#{perfTable.ipt}" />
+                                        </p:column>
+                                        <p:column filterBy="#{perfTable.nurseled}"  sortBy="#{perfTable.nurseled}"  headerText="nurseled">
+                                            <p:outputLabel value="#{perfTable.nurseled}" />
+                                        </p:column>
+                                        <p:column filterBy="#{perfTable.pcp}"  sortBy="#{perfTable.pcp}"  headerText="pcp">
+                                            <p:outputLabel value="#{perfTable.pcp}" />
+                                        </p:column>
+                                        <p:column filterBy="#{perfTable.presumptiveregister}"  sortBy="#{perfTable.presumptiveregister}"  headerText="presumptiveregister">
+                                            <p:outputLabel value="#{perfTable.presumptiveregister}" />
+                                        </p:column>
+                                        <p:column filterBy="#{perfTable.tbclinic}"  sortBy="#{perfTable.tbclinic}"  headerText="tbclinic">
+                                            <p:outputLabel value="#{perfTable.tbclinic}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:form>
+                            </p:tab>
+                            <p:tab title="CASE FINDINGS">
+                                <h:form>
+                                    <p:dataTable var="caseFindingTable" value="#{pmanager.medicalrescasefindingList}"   scrollable="true" scrollWidth="1000" widgetVar="caseFindingTable"
+                                                 paginator="true" rows="10"
+                                                 style="background: transparent; font-size: xx-small; width: 1000px "
+                                                 id="caseFindingTable"
+                                                 emptyMessage="No case finding found with given criteria" filteredValue="#{pmanager.medicalrescasefindingList}">
+                                        <f:facet name="header">
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/excel.png" width="32" height="32"/>
+                                                <p:dataExporter type="xls" target="caseFindingTable" fileName="caseFinding" />
+                                            </h:commandLink>
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/pdf.png" width="32" height="32"/>
+                                                <p:dataExporter type="pdf" target="caseFindingTable" fileName="caseFinding"/>
+                                            </h:commandLink>
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/csv.png" width="32" height="32"/>
+                                                <p:dataExporter type="csv" target="caseFindingTable" fileName="caseFinding" />
+                                            </h:commandLink>
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/xml.png" width="32" height="32"/>
+                                                <p:dataExporter type="xml" target="caseFindingTable" fileName="caseFinding" />
+                                            </h:commandLink>
+                                        </f:facet>
+                                        <p:column filterBy="#{caseFindingTable.medicalresID.facilityName}" sortBy="#{caseFindingTable.medicalresID.facilityName}" headerText="Facility name">
+                                            <p:outputLabel value="#{caseFindingTable.medicalresID.facilityName}" />
+                                        </p:column>
+                                        <p:column filterBy="#{caseFindingTable.medicalresID.visitdate}" sortBy="#{caseFindingTable.medicalresID.visitdate}" headerText="visit date">
+                                            <p:outputLabel value="#{caseFindingTable.medicalresID.visitdate}" />
+                                        </p:column>
+                                        <p:column filterBy="#{caseFindingTable.medicalresID.kaptldprojectofficer.name}" sortBy="#{caseFindingTable.medicalresID.kaptldprojectofficer.name}" headerText="KAPTLD project officer">
+                                            <p:outputLabel value="#{caseFindingTable.medicalresID.kaptldprojectofficer.name}" />
+                                        </p:column>
+                                        <p:column  sortBy="#{caseFindingTable.patientnum}"  headerText="patientnum">
+                                            <p:outputLabel value="#{caseFindingTable.patientnum}" />
+                                        </p:column>
+                                        <p:column  sortBy="#{caseFindingTable.bactfollowuptwothird}"  headerText="bactfollowuptwothird">
+                                            <p:outputLabel value="#{caseFindingTable.bactfollowuptwothird}" />
+                                        </p:column>
+                                        <p:column sortBy="#{caseFindingTable.children}"  headerText="children">
+                                            <p:outputLabel value="#{caseFindingTable.children}" />
+                                        </p:column>
+                                        <p:column sortBy="#{caseFindingTable.childrenipteligible}"  headerText="childrenipteligible">
+                                            <p:outputLabel value="#{caseFindingTable.childrenipteligible}" />
+                                        </p:column>
+                                        <p:column sortBy="#{caseFindingTable.childrenscreenedcontact}"  headerText="childrenscreenedcontact">
+                                            <p:outputLabel value="#{caseFindingTable.childrenscreenedcontact}" />
+                                        </p:column>
+                                        <p:column sortBy="#{caseFindingTable.newbactconfirmedpatients}"  headerText="newbactconfirmedpatients">
+                                            <p:outputLabel value="#{caseFindingTable.newbactconfirmedpatients}" />
+                                        </p:column>
+                                        <p:column  sortBy="#{caseFindingTable.numberbactconfirmed}"  headerText="numberbactconfirmed">
+                                            <p:outputLabel value="#{caseFindingTable.numberbactconfirmed}" />
+                                        </p:column>
+                                        <p:column  sortBy="#{caseFindingTable.numberextrapulmonaryreviewed}"  headerText="numberextrapulmonaryreviewed">
+                                            <p:outputLabel value="#{caseFindingTable.numberextrapulmonaryreviewed}" />
+                                        </p:column>
+                                        <p:column  sortBy="#{caseFindingTable.numtestwhorecommended}"  headerText="numtestwhorecommended">
+                                            <p:outputLabel value="#{caseFindingTable.numtestwhorecommended}" />
+                                        </p:column>
+                                        <p:column  sortBy="#{caseFindingTable.relapserad}"  headerText="relapserad">
+                                            <p:outputLabel value="#{caseFindingTable.relapserad}" />
+                                        </p:column>
+                                        <p:column   sortBy="#{caseFindingTable.screenedcontacts}"  headerText="screenedcontacts">
+                                            <p:outputLabel value="#{caseFindingTable.screenedcontacts}" />
+                                        </p:column>
+                                        <p:column   sortBy="#{caseFindingTable.tbhiv}"  headerText="tbhiv">
+                                            <p:outputLabel value="#{caseFindingTable.tbhiv}" />
+                                        </p:column>
+                                        <p:column  sortBy="#{caseFindingTable.tbhivcoinfectedart}"  headerText="tbhivcoinfectedart">
+                                            <p:outputLabel value="#{caseFindingTable.tbhivcoinfectedart}" />
+                                        </p:column>
+                                        <p:column sortBy="#{caseFindingTable.tbhivcoinfectedcpt}"  headerText="tbhivcoinfectedcpt">
+                                            <p:outputLabel value="#{caseFindingTable.tbhivcoinfectedcpt}" />
+                                        </p:column>
+                                        <p:column   sortBy="#{caseFindingTable.tbknownhivstats}"  headerText="tbknownhivstats">
+                                            <p:outputLabel value="#{caseFindingTable.tbknownhivstats}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:form>
+                            </p:tab>
+                            <p:tab title="PROJECTS">
+                                <h:form>
+                                    <p:dataTable var="projTable" value="#{pmanager.projectList}" widgetVar="projTable"
+                                                 paginator="true" rows="10"
+                                                 style="background: transparent; font-size: xx-small; "
+                                                 id="projTable"
+                                                 emptyMessage="No project found with given criteria" filteredValue="#{pmanager.projectList}">
+                                        <f:facet name="header">
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/excel.png" width="32" height="32"/>
+                                                <p:dataExporter type="xls" target="projTable" fileName="proj" />
+                                            </h:commandLink>
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/pdf.png" width="32" height="32"/>
+                                                <p:dataExporter type="pdf" target="projTable" fileName="proj"/>
+                                            </h:commandLink>
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/csv.png" width="32" height="32"/>
+                                                <p:dataExporter type="csv" target="projTable" fileName="proj" />
+                                            </h:commandLink>
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/xml.png" width="32" height="32"/>
+                                                <p:dataExporter type="xml" target="projTable" fileName="proj" />
+                                            </h:commandLink>
+                                        </f:facet>
+                                        <p:column filterBy="#{projTable.name}" sortBy="#{projTable.name}" headerText="Name">
+                                            <p:outputLabel value="#{projTable.name}" />
+                                        </p:column>
+                                        <p:column filterBy="#{projTable.deparmentID.name}" sortBy="#{projTable.deparmentID.name}" headerText="Department">
+                                            <p:outputLabel value="#{projTable.deparmentID.name}" />
+                                        </p:column>
+                                        <p:column filterBy="#{projTable.approvalDate}" sortBy="#{projTable.approvalDate}" headerText="date Approved">
+                                            <p:outputLabel value="#{projTable.approvalDate}" />
+                                        </p:column>
+                                        <p:column filterBy="#{projTable.overallObjective}" sortBy="#{projTable.overallObjective}" headerText="Overall Objective">
+                                            <p:outputLabel value="#{projTable.overallObjective}" />
+                                        </p:column>
+
+
+                                    </p:dataTable>
+                                </h:form>
+                            </p:tab>
+                            <p:tab title="DR-TB ANALYSIS">
+                                <h:form>
+                                    <p:dataTable var="resTable" value="#{pmanager.drugresistanceList}" widgetVar="resTable"
+                                                 paginator="true" rows="10"
+                                                 style="background: transparent; font-size: xx-small; "
+                                                 id="resTable"
+                                                 emptyMessage="No criteria found" filteredValue="#{pmanager.drugresistanceList}">
+                                        <f:facet name="header">
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/excel.png" width="32" height="32"/>
+                                                <p:dataExporter type="xls" target="resTable" fileName="res" />
+                                            </h:commandLink>
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/pdf.png" width="32" height="32"/>
+                                                <p:dataExporter type="pdf" target="resTable" fileName="res"/>
+                                            </h:commandLink>
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/csv.png" width="32" height="32"/>
+                                                <p:dataExporter type="csv" target="resTable" fileName="res" />
+                                            </h:commandLink>
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/xml.png" width="32" height="32"/>
+                                                <p:dataExporter type="xml" target="resTable" fileName="res" />
+                                            </h:commandLink>
+                                        </f:facet>
+                                        <p:column filterBy="#{resTable.casefinding.medicalresID.facilityName}" sortBy="#{resTable.casefinding.medicalresID.facilityName}" headerText="Facility">
+                                            <p:outputLabel value="#{resTable.casefinding.medicalresID.facilityName}" />
+                                        </p:column>
+                                        <p:column filterBy="#{resTable.casefinding.medicalresID.visitdate}" sortBy="#{resTable.casefinding.medicalresID.visitdate}" headerText="visit date">
+                                            <p:outputLabel value="#{resTable.casefinding.medicalresID.visitdate}" />
+                                        </p:column>
+                                        <p:column filterBy="#{resTable.casefinding.medicalresID.kaptldprojectofficer.name}" sortBy="#{resTable.casefinding.medicalresID.kaptldprojectofficer.name}" headerText="KAPTLD project officer">
+                                            <p:outputLabel value="#{resTable.casefinding.medicalresID.kaptldprojectofficer.name}" />
+                                        </p:column>
+                                        <p:column filterBy="#{resTable.datecreated}" sortBy="#{resTable.datecreated}" headerText="datecreated">
+                                            <p:outputLabel value="#{resTable.datecreated}" />
+                                        </p:column>
+                                        <p:column filterBy="#{resTable.drtbdiagnosedpatients}" sortBy="#{resTable.drtbdiagnosedpatients}" headerText="drtbdiagnosedpatients">
+                                            <p:outputLabel value="#{resTable.drtbdiagnosedpatients}" />
+                                        </p:column>
+                                        <p:column filterBy="#{resTable.drtbsecondtreatment}" sortBy="#{resTable.drtbsecondtreatment}" headerText="drtbsecondtreatment">
+                                            <p:outputLabel value="#{resTable.drtbsecondtreatment}" />
+                                        </p:column>
+                                        <p:column filterBy="#{resTable.geneexpert}" sortBy="#{resTable.geneexpert}" headerText="geneexpert">
+                                            <p:outputLabel value="#{resTable.geneexpert}" />
+                                        </p:column>
+                                        <p:column filterBy="#{resTable.recordedgenexpert}" sortBy="#{resTable.recordedgenexpert}" headerText="recordedgenexpert">
+                                            <p:outputLabel value="#{resTable.recordedgenexpert}" />
+                                        </p:column>
+
+                                    </p:dataTable>
+                                </h:form>
+                            </p:tab>
+
+                            <p:tab title="BUDGETARY ALLOCATION">
+                                <h:form>
+                                    <p:dataTable var="budgTable" value="#{pmanager.budgetlist}" widgetVar="budgTable"
+                                                 paginator="true" rows="10"
+                                                 style="background: transparent; font-size: xx-small; "
+                                                 id="budgTable"
+                                                 emptyMessage="No Budget details found with given criteria" filteredValue="#{pmanager.budgetlist}">
+                                        <f:facet name="header">
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/excel.png" width="32" height="32"/>
+                                                <p:dataExporter type="xls" target="budgTable" fileName="budg" />
+                                            </h:commandLink>
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/pdf.png" width="32" height="32"/>
+                                                <p:dataExporter type="pdf" target="budgTable" fileName="budg"/>
+                                            </h:commandLink>
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/csv.png" width="32" height="32"/>
+                                                <p:dataExporter type="csv" target="budgTable" fileName="budg" />
+                                            </h:commandLink>
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/xml.png" width="32" height="32"/>
+                                                <p:dataExporter type="xml" target="budgTable" fileName="budg" />
+                                            </h:commandLink>
+                                        </f:facet>
+                                        <p:column filterBy="#{budgTable.activityID.achievement}" sortBy="#{budgTable.activityID.achievement}" headerText="Achievement">
+                                            <p:outputLabel value="#{budgTable.activityID.achievement}" />
+                                        </p:column>
+                                        <p:column filterBy="#{budgTable.approvedBudget}" sortBy="#{budgTable.approvedBudget}" headerText="Approved budget">
+                                            <p:outputLabel value="#{budgTable.approvedBudget}" />
+                                        </p:column>
+                                        <p:column filterBy="#{budgTable.activityID.projectID.name}" sortBy="#{budgTable.activityID.projectID.name}" headerText="KAPTLD project officer">
+                                            <p:outputLabel value="#{budgTable.activityID.projectID.name}" />
+                                        </p:column>
+
+
+                                    </p:dataTable>
+                                </h:form>
+                            </p:tab>
+                            <p:tab title="EXPENDITURE">
+                                <h:form>
+                                    <p:dataTable var="expTable" value="#{pmanager.expList}" widgetVar="expTable"
+                                                 paginator="true" rows="10"
+                                                 style="background: transparent; font-size: xx-small; "
+                                                 id="expTable"
+                                                 emptyMessage="No expenditure details found with given criteria" filteredValue="#{pmanager.expList}">
+                                        <f:facet name="header">
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/excel.png" width="32" height="32"/>
+                                                <p:dataExporter type="xls" target="expTable" fileName="exp" />
+                                            </h:commandLink>
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/pdf.png" width="32" height="32"/>
+                                                <p:dataExporter type="pdf" target="expTable" fileName="exp"/>
+                                            </h:commandLink>
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/csv.png" width="32" height="32"/>
+                                                <p:dataExporter type="csv" target="expTable" fileName="exp" />
+                                            </h:commandLink>
+                                            <h:commandLink>
+                                                <h:graphicImage value="/images/xml.png" width="32" height="32"/>
+                                                <p:dataExporter type="xml" target="expTable" fileName="exp" />
+                                            </h:commandLink>
+                                        </f:facet>
+                                        <p:column filterBy="#{expTable.activityID.achievement}" sortBy="#{expTable.activityID.achievement}" headerText="Achievement">
+                                            <p:outputLabel value="#{expTable.activityID.achievement}" />
+                                        </p:column>
+                                        <p:column filterBy="#{expTable.amount}" sortBy="#{expTable.amount}" headerText="Ammount">
+                                            <p:outputLabel value="#{expTable.amount}" />
+                                        </p:column>
+                                        <p:column filterBy="#{expTable.contractor}" sortBy="#{expTable.contractor}" headerText="Contractor">
+                                            <p:outputLabel value="#{expTable.contractor}" />
+                                        </p:column>
+                                        <p:column filterBy="#{expTable.item}" sortBy="#{expTable.item}" headerText="Item">
+                                            <p:outputLabel value="#{expTable.item}" />
+                                        </p:column>
+                                        <p:column filterBy="#{expTable.supplier}" sortBy="#{expTable.supplier}" headerText="Supplier">
+                                            <p:outputLabel value="#{expTable.supplier}" />
+                                        </p:column>
+
+                                    </p:dataTable>
+                                </h:form>
+                            </p:tab>
+                        </p:tabView>
+
+                    </h:panelGrid>
+                </p:panel>
+
+
+
+            </div>
+        </div>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-danger">
+            <p:commandButton value="Yes" type="button" styleClass="btn-primary ui-confirmdialog-yes"
+                             icon="fa fa-check"/>
+            <p:commandButton value="No" type="button" styleClass="btn-danger ui-confirmdialog-no"
+                             icon="fa fa-close"/>
+        </p:confirmDialog>
+
+        <script type="text/javascript">
+            /*if ('serviceWorker' in navigator) {
+             navigator.serviceWorker.register('sw.js');
+             }*/
+
+
+            if ('serviceWorker' in navigator) {
+                /*  navigator.serviceWorker.getRegistrations().then(function (registrations) {
+                 for (let registration of registrations) {
+                 registration.unregister()
+                 }
+                 });*/
+
+                window.addEventListener('load', function () {
+                    navigator.serviceWorker.register('sw.js').then(function (registration) {
+                        // Registration was successful
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    }, function (err) {
+                        // registration failed :(
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+                });
+            }
+        </script>
+    </ui:define>
+
+
+</ui:composition>

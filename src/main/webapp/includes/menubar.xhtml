@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ul class="nav navbar-nav">
+        <li>
+            <p:link href="/index2.xhtml" onclick="clearBreadCrumbs()">
+                <i class="fa fa-home"></i>
+                <span>HOME</span>
+            </p:link>
+        </li>
+        <li>
+            <p:link href="/accident.xhtml" rendered="#{acc.reportAccident}">
+                <i class="fa  fa-money"></i>
+                <span>NEW ACCIDENT</span>
+            </p:link>
+        </li>
+        <li>
+            <p:link href="/deployment.xhtml" rendered="#{acc.deployHelpers}">
+                <i class="fa fa-dashboard"></i>
+                <span>DEPLOY HELPERS</span>
+            </p:link>
+        </li>
+        <li>
+            <p:link href="/deployment_1.xhtml">
+                <i class="fa fa-dashboard"></i>
+                <span>DEPLOYED HELPERS</span>
+            </p:link>
+        </li>
+        <li>
+            <p:link href="/audit.xhtml" rendered="#{acc.auditTrails}">
+                <i class="fa fa-info-circle"></i>
+                <span>SYSTEM AUDIT</span>
+            </p:link>
+        </li>
+        <li>
+            <p:link href="/maps.xhtml">
+                <i class="fa fa-map-marker"></i>
+                <span>ACCIDENT SPOTS</span>
+            </p:link>
+        </li>
+        <li>
+            <p:link href="/actorMaps.xhtml">
+                <i class="fa fa-map-marker"></i>
+                <span>ACTORS/HELPER SPOTS</span>
+            </p:link>
+        </li>
+        <li>
+            <p:link href="/criteriaReports.xhtml" rendered="#{acc.criteriaReports}">
+                <i class="fa  fa-bar-chart"></i>
+                <span>SYSTEM REPORTS<br/></span>
+            </p:link>
+        </li>
+
+        <li>
+            <p:link href="/users.xhtml" rendered="#{acc.registerUsers}">
+                <i class="fa fa-user"></i>
+                <span>REGISTER USERS</span>
+            </p:link>
+        </li>
+
+        <li>
+            <p:link href="/actors.xhtml" rendered="#{acc.registerHelpers}">
+                <i class="fa  fa-user"></i>
+                <span>REGISTER HELPERS</span>
+            </p:link>
+        </li>
+        <li>
+            <p:link href="/status.xhtml" rendered="#{acc.recordStatus}">
+                <i class="fa  fa-hourglass-2"></i>
+                <span>STATUS</span>
+            </p:link>
+        </li>
+        <li>
+            <p:link href="/groups.xhtml" rendered="#{acc.registerGroup}"> 
+                <i class="fa fa-object-ungroup"></i>
+                <span>USER GROUPS</span>
+            </p:link>
+        </li>
+        <li>
+            <p:link href="/mapKeys.xhtml" rendered="#{acc.registerGroup}"> 
+                <i class="fa fa-map-marker"></i>
+                <span>GOOGLE MAP KEY</span>
+            </p:link>
+        </li>
+    </ul>
+
+</ui:composition>

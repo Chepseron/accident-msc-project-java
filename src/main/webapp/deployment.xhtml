@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="#{layoutMB.layout}">
+
+    <ui:define name="head-end">
+        <ui:param name="renderBreadCrumb" value="true"/>
+    </ui:define>
+
+    <ui:define name="title">
+    </ui:define>
+    <ui:define name="body">
+
+        <div class="box box-primary">
+            <div class="box-header with-border">
+
+                <h:form id="ButtonsForm">
+                    <p:splitButton value="New" action="car-form?faces-redirect=true"
+                                   icon="fa fa-plus"
+                                   styleClass="hidden-md hidden-lg btn-primary">
+                        <p:menuitem value="Delete Selected" 
+                                    process="@this" update="@form" 
+                                    icon="fa fa-trash">
+                            <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger"/>
+                        </p:menuitem>
+                        <p:menuitem value="Search" update="@(.ui-dialog)"
+                                    oncomplete="PF('searchDialog').show()"
+                                    icon="fa fa-search"/>
+                        <p:menuitem value="Clear" update="@(.ui-dialog, .ui-datatable)" process="@form"
+                                    icon="fa fa-refresh"/>
+                    </p:splitButton>
+                </h:form>
+                <p:separator/>
+
+                <p:panel id="spanel"   style="margin: 4em; background: transparent;  position: relative; border: 0">
+                    <h:panelGrid columns="1">
+                        <p:growl id="msgs1" sticky="true" showDetail="true" />
+                        <p:tabView  styleClass="si-icon-16x16 si-icon-edit"    style="background: transparent; width: 100%; height: 100%; border: 0" >  
+                            <p:tab title="MANAGE DEPLOYMENT" >
+                                <h:form id="activityForm" style="width: fit-content; border: 0" > 
+                               
+                                        <p:panelGrid columns="2" columnClasses="ui-grid-col-5,ui-grid-col-8"
+                                                     layout="grid" styleClass="ui-fluid card">
+                                            <p:outputLabel value="Accident"/>
+                                            <p:selectOneMenu    converter="#{convertor}" immediate="true"   value="#{acc.deployment.accident}"  >
+                                                <f:selectItem itemLabel=" " itemValue="" noSelectionOption="true" />
+                                                <f:selectItems value="#{acc.accidentList}"  var="deployment" itemValue="#{deployment}" itemLabel="#{deployment.placeOccured}  #{deployment.road} injured victims #{deployment.injuredVictims} Deceased Victims #{deployment.deadVictims}" />
+                                            </p:selectOneMenu>
+                                            <p:outputLabel value="Status"/>
+                                            <p:selectOneMenu    converter="#{convertor}" immediate="true"   value="#{acc.deployment.statusID}"  >
+                                                <f:selectItem itemLabel=" " itemValue="" noSelectionOption="true" />
+                                                <f:selectItems value="#{acc.statusList}"  var="depunit" itemValue="#{depunit}" itemLabel="#{depunit.name}" />
+                                            </p:selectOneMenu>
+                                            <p:outputLabel value="Severity"/>
+                                            <p:selectOneMenu    converter="#{convertor}" immediate="true"   value="#{acc.deployment.severity}"  >
+                                                <f:selectItem itemLabel="High" itemValue="High"/>
+                                                <f:selectItem itemLabel="Moderate" itemValue="Moderate"/>
+                                                <f:selectItem itemLabel="Low" itemValue="Low"/>
+                                            </p:selectOneMenu>
+                                            <p:outputLabel value="Deployed Unit"/>
+                                            <p:selectOneMenu    converter="#{convertor}" immediate="true"   value="#{acc.deployment.deploymentUnitID}">
+                                                <p:ajax listener="#{acc.selectIndividuals}" update="individual" />
+                                                <f:selectItem itemLabel=" " itemValue="" noSelectionOption="true" />
+                                                <f:selectItems value="#{acc.deploymentunitList}"  var="deployment" itemValue="#{deployment.orgname}" itemLabel="#{deployment.orgname}" />
+                                            </p:selectOneMenu>
+                                            <p:outputLabel value="Deployed Individual"/>
+                                            <p:selectOneMenu    converter="#{convertor}" immediate="true"  id="individual"  value="#{acc.deployment.actor}">
+                                                <f:selectItem itemLabel=" " itemValue="" noSelectionOption="true" />
+                                                <f:selectItems value="#{acc.userList}"  var="deployment" itemValue="#{deployment}" itemLabel="#{deployment.name}" />
+                                            </p:selectOneMenu>
+                                            <p:messages for="userForm"  showDetail="true" />
+                                        </p:panelGrid>
+                                        <h:panelGrid columns="8">
+                                            <p:commandButton value="SUBMIT"  icon="fa fa-plus" styleClass="btn-primary"  action="#{acc.createDeployment}" />
+                                            <p:commandButton value="LOGOUT"   action="#{acc.logout}"  icon="fa fa-sign-out" styleClass="btn-primary" />
+                                        </h:panelGrid>
+                                 
+                                </h:form>
+                            </p:tab>
+                            <p:tab title="CREATED DEPLOYMENT">
+                                <h:form id="deploymentForm" style="width: auto" >
+                                    <p:dataTable var="deployment" value="#{acc.deploymentList}" 
+                                                 paginator="true" rows="10"
+
+                                                 style="background: transparent; font-size:11px"
+                                                 id="activitysTable"
+                                                 emptyMessage="No deployment found with given criteria" filteredValue="#{acc.deploymentList}">
+                                        <p:column filterBy="#{deployment.accident.placeOccured}" sortBy="#{deployment.accident.placeOccured}" headerText="Accident">
+                                            <p:outputLabel value="#{deployment.accident.placeOccured}" />
+                                        </p:column>
+                                        <p:column filterBy="#{deployment.createdBy.name}" sortBy="#{deployment.createdBy.name}" headerText="Created By">
+                                            <p:outputLabel value="#{deployment.createdBy.name}" />
+                                        </p:column>
+                                        <p:column filterBy="#{deployment.createdOn}" sortBy="#{deployment.createdOn}" headerText="created On">
+                                            <p:outputLabel value="#{deployment.createdOn}" />
+                                        </p:column>
+                                        <p:column filterBy="#{deployment.actor}" sortBy="#{deployment.actor}" headerText="Actor">
+                                            <p:outputLabel value="#{deployment.actor}" />
+                                        </p:column>
+                                        <p:column filterBy="#{deployment.deploymentUnitID}" sortBy="#{deployment.deploymentUnitID}" headerText="Organisation name">
+                                            <p:outputLabel value="#{deployment.deploymentUnitID}" />
+                                        </p:column>
+                                        <p:column style="width:4%">
+                                            <p:commandLink process="@this" styleClass="si-icon-16x16 si-icon-edit" update=":editForm:deploymentDetail" oncomplete="PF('deploymentDialog').show()"  value="DETAILS"   title="Edit  #{deployment.accident}'s DETAILS">                                                  
+                                                <f:setPropertyActionListener value="#{deployment}"   target="#{acc.deployment}" />  
+                                            </p:commandLink>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:form>
+                            </p:tab>
+                        </p:tabView>
+
+                        <h:form id="editForm">
+                            <p:dialog header="Deployment" dynamic="true" widgetVar="deploymentDialog" showEffect="clip"  hideEffect="explode" resizable="false">
+                                <p:outputPanel id="deploymentDetail" style="text-align:center;">  
+
+                                    <h:panelGrid columns="1" >
+                                        <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+                                                     layout="grid" styleClass="ui-fluid card">
+                                            <p:outputLabel value="Accident"/>
+                                            <p:selectOneMenu    converter="#{convertor}" immediate="true"   value="#{acc.deployment.accident}"  >
+                                                <f:selectItem itemLabel=" " itemValue="" noSelectionOption="true" />
+                                                <f:selectItems value="#{acc.accidentList}"  var="deployment" itemValue="#{deployment}" itemLabel="#{deployment.placeOccured}  #{deployment.road} injured victims #{deployment.injuredVictims} Deceased Victims #{deployment.deadVictims}" />
+                                            </p:selectOneMenu>
+                                            <p:outputLabel value="Status"/>
+                                            <p:selectOneMenu    converter="#{convertor}" immediate="true"   value="#{acc.deployment.statusID}"  >
+                                                <f:selectItem itemLabel=" " itemValue="" noSelectionOption="true" />
+                                                <f:selectItems value="#{acc.statusList}"  var="depunit" itemValue="#{depunit}" itemLabel="#{depunit.name}" />
+                                            </p:selectOneMenu>
+                                            <p:outputLabel value="Severity"/>
+                                            <p:selectOneMenu    converter="#{convertor}" immediate="true"   value="#{acc.deployment.severity}"  >
+                                                <f:selectItem itemLabel="High" itemValue="High"/>
+                                                <f:selectItem itemLabel="Moderate" itemValue="Moderate"/>
+                                                <f:selectItem itemLabel="Low" itemValue="Low"/>
+                                            </p:selectOneMenu>
+                                            <p:outputLabel value="Deployed Unit"/>
+                                            <p:selectManyMenu    converter="#{convertor}" immediate="true"   value="#{acc.deployment.deploymentUnitID}" showCheckbox="true" >
+                                                <p:ajax listener="#{acc.selectIndividuals}" update="individual" />
+                                                <f:selectItem itemLabel=" " itemValue="" noSelectionOption="true" />
+                                                <f:selectItems value="#{acc.deploymentunitList}"  var="deployment" itemValue="#{deployment.orgname}" itemLabel="#{deployment.orgname}" />
+                                            </p:selectManyMenu>
+                                            <p:outputLabel value="Deployed Individual"/>
+                                            <p:selectManyMenu    converter="#{convertor}" immediate="true"  id="individual"  value="#{acc.deployment.actor}" showCheckbox="true" >
+                                                <f:selectItem itemLabel=" " itemValue="" noSelectionOption="true" />
+                                                <f:selectItems value="#{acc.deploymentunitList}"  var="deployment" itemValue="#{deployment.actors}" itemLabel="#{deployment.actors}" />
+                                            </p:selectManyMenu>
+
+                                            <p:messages for="userForm"  showDetail="true" />
+                                        </p:panelGrid>
+                                        <h:panelGrid columns="8">
+                                            <p:commandButton value="SUBMIT"  icon="fa fa-plus" styleClass="btn-primary"  action="#{acc.createDeployment}" />
+                                            <p:commandButton value="LOGOUT"   action="#{acc.logout}"  icon="fa fa-sign-out" styleClass="btn-primary" />
+                                        </h:panelGrid>
+                                    </h:panelGrid>
+
+                                </p:outputPanel>
+                            </p:dialog>
+                        </h:form>
+                    </h:panelGrid>
+                </p:panel>
+            </div>
+        </div>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-danger">
+            <p:commandButton value="Yes" type="button" styleClass="btn-primary ui-confirmdialog-yes"
+                             icon="fa fa-check"/>
+            <p:commandButton value="No" type="button" styleClass="btn-danger ui-confirmdialog-no"
+                             icon="fa fa-close"/>
+        </p:confirmDialog>
+
+        <script type="text/javascript">
+            /*if ('serviceWorker' in navigator) {
+             navigator.serviceWorker.register('sw.js');
+             }*/
+
+
+            if ('serviceWorker' in navigator) {
+                /*  navigator.serviceWorker.getRegistrations().then(function (registrations) {
+                 for (let registration of registrations) {
+                 registration.unregister()
+                 }
+                 });*/
+
+                window.addEventListener('load', function () {
+                    navigator.serviceWorker.register('sw.js').then(function (registration) {
+                        // Registration was successful
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    }, function (err) {
+                        // registration failed :(
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+                });
+            }
+        </script>
+    </ui:define>
+
+
+</ui:composition>

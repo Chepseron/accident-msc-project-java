@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="#{layoutMB.layout}">
+
+    <ui:define name="head-end">
+        <ui:param name="renderBreadCrumb" value="true"/>
+    </ui:define>
+
+    <ui:define name="title">
+    </ui:define>
+    <ui:define name="body">
+
+        <div class="box box-primary">
+            <p:panel id="spanel">
+                <h:panelGrid columns="1">
+                    <p:growl id="msgs1" sticky="true" showDetail="true" />
+                    <p:tabView  styleClass="si-icon-16x16 si-icon-edit"    style="background: transparent; width: 100%; height: 100%; border: 0" >  
+                        <p:tab title="MANAGE ACCIDENT" >
+                            <h:form id="activityForm" style="width: auto" > 
+
+                                <h:panelGrid columns="1" >
+                                    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+                                                 layout="grid" styleClass="ui-fluid card">
+
+                                        <p:outputLabel value="Deceased Victims"/>
+                                        <p:inputText type="number"  style="width:200px"   value="#{acc.accident.deadVictims}" />
+                                        <p:outputLabel value="Injured Victims"/>
+                                        <p:inputText  type="number"  style="width:200px"   value="#{acc.accident.injuredVictims}" />
+
+                                        <p:outputLabel value="Latitude"/>
+                                        <inputText   style="width:200px; color: orange" value="#{acc.accident.latitude}" id="latitude"/>
+                                        <p:outputLabel value="Longitude"/>
+                                        <inputText   style="width:200px; color: orange" value="#{acc.accident.longitude}" id="longitude"/>
+
+                                        <p:messages for="userForm"  showDetail="true" />
+                                    </p:panelGrid>
+                                    <h:panelGrid columns="8">
+                                        <p:commandButton value="SUBMIT"  icon="fa fa-plus" class="find-me" styleClass="btn-primary"  action="#{acc.createAccident()}"/>
+                                        <p:commandButton value="LOGOUT"   action="#{acc.logout}"  icon="fa fa-sign-out" styleClass="btn-primary" />
+                                    </h:panelGrid>
+
+                                </h:panelGrid>
+                                <p:remoteCommand name="setLang" process="@this" partialSubmit="true" actionListener="#{acc.setlatLong}" />
+                            </h:form>
+                        </p:tab>
+                        <p:tab title="REPORTED ACCIDENTS">
+                            <h:form id="accidentForm" style="width: auto" >
+                                <p:dataTable var="accident" value="#{acc.accidentList}" 
+                                             paginator="true" rows="10"
+
+                                             style="background: transparent; font-size:11px"
+                                             id="activitysTable"
+                                             emptyMessage="No reported accident found with given criteria" filteredValue="#{acc.accidentList}">
+                                    j
+                                    <p:column filterBy="#{accident.deadVictims}" sortBy="#{accident.deadVictims}" headerText="Deceased Victims">
+                                        <p:outputLabel value="#{accident.deadVictims}" />
+                                    </p:column>
+                                    <p:column filterBy="#{accident.injuredVictims}" sortBy="#{accident.injuredVictims}" headerText="injured Victims">
+                                        <p:outputLabel value="#{accident.injuredVictims}" />
+                                    </p:column>
+                                    <p:column filterBy="#{accident.statusID}" sortBy="#{accident.statusID}" headerText="Status">
+                                        <p:outputLabel value="#{accident.statusID}" />
+                                    </p:column>
+                                    <p:column filterBy="#{accident.msisdn}" sortBy="#{accident.msisdn}" headerText="msisdn">
+                                        <p:outputLabel value="#{accident.msisdn}" />
+                                    </p:column>
+                                    <p:column filterBy="#{accident.placeOccured}" sortBy="#{accident.placeOccured}" headerText="place Occured">
+                                        <p:outputLabel value="#{accident.placeOccured}" />
+                                    </p:column>
+                                    <p:column filterBy="#{accident.road}" sortBy="#{accident.road}" headerText="Road">
+                                        <p:outputLabel value="#{accident.road}" />
+                                    </p:column>
+                                    <p:column filterBy="#{accident.timeOccured}" sortBy="#{accident.timeOccured}" headerText="time Occured">
+                                        <p:outputLabel value="#{accident.timeOccured}" />
+                                    </p:column>
+
+                                    <p:column style="width:4%">
+                                        <p:commandLink process="@this" styleClass="si-icon-16x16 si-icon-edit" update=":editForm:accidentDetail" oncomplete="PF('accidentDialog').show()"  value="DETAILS"   title="Edit  #{accident.road}'s DETAILS">                                                  
+                                            <f:setPropertyActionListener value="#{accident}"   target="#{acc.accident}" />  
+                                        </p:commandLink>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:form>
+                        </p:tab>
+                    </p:tabView>
+                    <h:form id="editForm">
+                        <p:dialog header="Accidents" dynamic="true" widgetVar="accidentDialog" showEffect="clip"  hideEffect="explode" resizable="false">
+                            <p:outputPanel id="accidentDetail" style="text-align:center;">  
+
+                                <h:panelGrid columns="1" >
+                                    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+                                                 layout="grid" styleClass="ui-fluid card">
+
+                                        <p:outputLabel value="Deceased Victims"/>
+                                        <p:inputText   style="width:200px"   value="#{acc.accident.deadVictims}" />
+                                        <p:outputLabel value="Injured Victims"/>
+                                        <p:inputText   style="width:200px"   value="#{acc.accident.injuredVictims}" />
+                                        <p:outputLabel value="Msisdn"/>
+                                        <p:inputText   style="width:200px"   value="#{acc.accident.msisdn}" />
+                                        <p:outputLabel value="Road Occured"/>
+                                        <p:inputText   style="width:200px"   value="#{acc.accident.road}" />
+                                        <p:outputLabel value="Latitude"/>
+                                        <p:inputText   style="width:200px"   value="#{acc.accident.latitude}" />
+                                        <p:outputLabel value="Longitude"/>
+                                        <p:inputText   style="width:200px"   value="#{acc.accident.longitude}" />
+                                        <p:outputLabel value="Place  Of occurence"/>
+                                        <p:inputText  class="placeOfOccurence"  style="width:200px"   value="#{acc.accident.placeOccured}" />
+                                        <p:messages for="userForm"  showDetail="true" />
+                                    </p:panelGrid>
+                                    <h:panelGrid columns="8">
+                                        <p:commandButton value="SUBMIT"  icon="fa fa-plus" styleClass="btn-primary"  action="#{acc.updateAccident()}" />
+                                        <p:commandButton value="LOGOUT"   action="#{acc.logout}"  icon="fa fa-sign-out" styleClass="btn-primary" />
+                                    </h:panelGrid>
+                                </h:panelGrid>
+
+                            </p:outputPanel>
+                        </p:dialog>
+                    </h:form>
+                </h:panelGrid>
+            </p:panel>
+
+        </div>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-danger">
+            <p:commandButton value="Yes" type="button" styleClass="btn-primary ui-confirmdialog-yes"
+                             icon="fa fa-check"/>
+            <p:commandButton value="No" type="button" styleClass="btn-danger ui-confirmdialog-no"
+                             icon="fa fa-close"/>
+        </p:confirmDialog>
+
+        <script type="text/javascript">
+
+            window.onload = function () {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var lat = position.coords.latitude;
+                    var lng = position.coords.longitude;
+                    console.log(lat.toFixed(8));
+                    console.log(lng.toFixed(8));
+
+                    var latitude = lat.toFixed(8);
+                    var longitude = lng.toFixed(8);
+
+
+                    document.getElementById('latitude').innerHTML = latitude;
+                    document.getElementById('longitude').innerHTML = longitude;
+
+                    setLang([{name: 'latitude', value: latitude}, {name: 'longitude', value: longitude}]);
+
+                });
+            };
+        </script>
+        <!--
+                <script type="text/javascript">
+                    function getAddress(latitude, longitude) {
+                        return new Promise(function (resolve, reject) {
+                            var request = new XMLHttpRequest();
+                            var method = 'GET';
+                            var url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng=' + latitude + ',' + longitude + '&sensor=true';
+                            var async = true;
+                            request.open(method, url, async);
+                            request.onreadystatechange = function () {
+                                if (request.readyState == 4) {
+                                    if (request.status == 200) {
+                                        var data = JSON.parse(request.responseText);
+                                        var address = data.results[0];
+                                        resolve(address);
+                                    } else {
+                                        reject(request.status);
+                                    }
+                                }
+                            };
+                            request.send();
+                        });
+                    }
+        
+                </script>-->
+    </ui:define>
+
+
+</ui:composition>
