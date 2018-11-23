@@ -203,6 +203,9 @@ public class acc implements Serializable {
                 setRecordStatus(false);
                 setRegisterGroup(false);
             }
+
+            Integer phone = getUser().getPhone();
+            accident.setMsisdn(phone.toString());
             getUtx().begin();
             getAudit().setAction("logged into the system at  " + new Date());
             getAudit().setCreatedby(1);
@@ -664,7 +667,7 @@ public class acc implements Serializable {
             accident.setLatitude(latitude);
             accident.setLongitude(longitude);
             accident.setStatusID(new Status(1));
-            accident.setMsisdn("0739895326");
+            accident.setMsisdn(accident.getMsisdn());
             accident.setRoad(results[0].formattedAddress);
             accident.setPlaceOccured(results[0].formattedAddress);
             accident.setTimeOccured(new java.util.Date());
